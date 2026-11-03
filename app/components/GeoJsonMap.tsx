@@ -1,0 +1,148 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import * as maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+
+maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
+
+export default function GeoJsonMap() {
+    const mapContainer = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!mapContainer.current) return;
+
+        const map = new maplibregl.Map({
+            container: mapContainer.current,
+            style: {
+                version: 8,
+                sources: {},
+                layers: [
+                    {
+                        id: "background",
+                        type: "background",
+                        paint: {
+                            "background-color": "#121923",
+                        },
+                    },
+                ],
+            },
+            center: [139.7, 35.7],
+            zoom: 8,
+            projection: "globe",
+            minZoom: 4,
+            maxZoom: 9
+        });
+
+        map.on("load", async () => {
+            try {
+                const response = await fetch("/GISdata/cityGIS.json");
+                if (!response.ok) throw new Error("GeoJSON load failed");
+
+                const geojson = await response.json();
+
+                map.addSource("city", {
+                    type: "geojson",
+                    data: geojson,
+                });
+
+                map.addLayer({
+                    id: "city-fill",
+                    type: "fill",
+                    source: "city",
+                    paint: {
+                        "fill-color": "#313330",
+                        "fill-opacity": 1,
+                    },
+                });
+
+                map.addLayer({
+                    id: "city-line",
+                    type: "line",
+                    source: "city",
+                    paint: {
+                        "line-color": "#c5cdeb",
+                        "line-width": [
+                            "interpolate",
+                            ["linear"],
+                            ["zoom"],
+                            3,
+                            0.1,
+                            5,
+                            0.2,
+                            8,
+                            0.6,
+                            11,
+                            1.0,
+                            14,
+                            2.8,
+                        ],
+                    },
+                });
+
+                const bounds = new maplibregl.LngLatBounds();
+
+                const visit = (coords: any): void => {
+                    if (!Array.isArray(coords)) return;
+
+                    if (
+                        typeof coords[0] === "number" &&
+                        typeof coords[1] === "number"
+                    ) {
+                        bounds.extend([coords[0], coords[1]]);
+                        return;
+                    }
+
+                    coords.forEach(visit);
+                };
+
+                const visitGeometry = (geometry: any): void => {
+                    if (!geometry) return;
+
+                    if (geometry.type === "GeometryCollection") {
+                        geometry.geometries?.forEach(visitGeometry);
+                    } else {
+                        visit(geometry.coordinates);
+                    }
+                };
+
+                if (geojson.type === "FeatureCollection") {
+                    geojson.features.forEach((feature: any) => {
+                        visitGeometry(feature.geometry);
+                    });
+                } else if (geojson.type === "Feature") {
+                    visitGeometry(geojson.geometry);
+                } else {
+                    visitGeometry(geojson);
+                }
+
+                if (!bounds.isEmpty()) {
+                    map.fitBounds(bounds, {
+                        padding: 30,
+                        maxZoom: 15,
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
+        map.on("error", (event) => {
+            console.error(event.error);
+        });
+
+        return () => map.remove();
+    }, []);
+
+    return (
+        <div
+            ref={mapContainer}
+            style={{
+                position: "fixed",
+                inset: 0,
+                width: "100%",
+                height: "100dvh",
+            }}
+        />
+    );
+}
