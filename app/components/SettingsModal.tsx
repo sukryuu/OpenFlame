@@ -101,11 +101,139 @@ export default function Modal({
                                     <div className="flex items-center gap-x-1">
                                         <a
                                             className="font-semibold"
-                                            href="https://www.data.jma.go.jp/developer/gis.html"
+                                            href="https://maplibre.org"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             MapLibre GL JS
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-x-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="size-4"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M4.5 6.75h15m-15 5.25h15m-15 5.25h15"
+                                        />
+                                    </svg>
+
+                                    <h2 className="text-xs text-neutral-300">
+                                        UI
+                                    </h2>
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://headlessui.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Headless UI
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://ui.shadcn.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            shadcn/ui
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://base-ui.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Base UI
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-x-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="size-4"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                                        />
+                                    </svg>
+
+                                    <h2 className="text-xs text-neutral-300">
+                                        アイコン
+                                    </h2>
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://heroicons.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Heroicons
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://lucide.dev/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Lucide
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://react-icons.github.io/react-icons/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            React Icons
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
