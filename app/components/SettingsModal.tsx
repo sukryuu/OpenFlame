@@ -34,7 +34,6 @@ export default function Modal({
                 className="relative z-50"
                 onClose={() => setIsOpenModal(false)}
             >
-                {/* 背景のアニメーション */}
                 <TransitionChild
                     enter="ease-out duration-300"
                     enterFrom="opacity-0"
@@ -46,7 +45,7 @@ export default function Modal({
                     <div className="fixed inset-0 bg-gray-900/70 backdrop-blur-sm" />
                 </TransitionChild>
 
-                <div className="fixed inset-0 flex items-center justify-center p-4">
+                <div className="fixed inset-0 flex items-center justify-center p-4 text-white">
                     <TransitionChild
                         enter="ease-out duration-300"
                         enterFrom="opacity-0 scale-95 translate-y-2"
