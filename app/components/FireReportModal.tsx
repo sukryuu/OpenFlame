@@ -25,7 +25,7 @@ export default function FireReportModal({
 }: FireReportModalProps) {
     const modalRef = useRef<HTMLDivElement>(null);
     const [currentStep, setCurrentStep] = React.useState(1);
-    const totalSteps = 4;
+    const totalSteps = 3;
     const progress = (currentStep / totalSteps) * 100;
     const [reportType, setReportType] = React.useState("");
     const [otherDescription, setOtherDescription] = React.useState("");
@@ -34,6 +34,9 @@ export default function FireReportModal({
         lat: number;
         lng: number;
     } | null>(null);
+
+    const [selectedAddress, setSelectedAddress] = React.useState("");
+    const [isAddressLoading, setIsAddressLoading] = React.useState(false);
 
     useEffect(() => {
         if (isOpenReport) {
@@ -46,6 +49,84 @@ export default function FireReportModal({
             document.body.classList.remove("overflow-hidden");
         };
     }, [isOpenReport]);
+
+    useEffect(() => {
+        if (!selectedLocation) {
+            setSelectedAddress("");
+            return;
+        }
+
+        const getAddress = async () => {
+            setIsAddressLoading(true);
+            setSelectedAddress("");
+
+            try {
+                const { lat, lng } = selectedLocation;
+
+                // 国土地理院の逆ジオコーディングAPI
+                const response = await fetch(
+                    `https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress?lat=${lat}&lon=${lng}`,
+                );
+
+                if (!response.ok) {
+                    throw new Error("住所の取得に失敗しました");
+                }
+
+                const data = await response.json();
+
+                if (!data.results?.muniCd) {
+                    throw new Error("住所が見つかりませんでした");
+                }
+
+                const { muniCd, lv01Nm } = data.results;
+
+                const normalizedCode = String(Number(muniCd));
+
+                const muniResponse = await fetch(
+                    "https://maps.gsi.go.jp/js/muni.js",
+                );
+
+                if (!muniResponse.ok) {
+                    throw new Error("市区町村データの取得に失敗しました");
+                }
+
+                const muniText = await muniResponse.text();
+
+                const muniLine = muniText
+                    .split("\n")
+                    .find((line: string) =>
+                        line.includes(`GSI.MUNI_ARRAY["${normalizedCode}"]`),
+                    );
+
+                if (!muniLine) {
+                    throw new Error("市区町村が見つかりませんでした");
+                }
+
+                const match = muniLine.match(/=\s*['"]([^'"]+)['"]/);
+
+                if (!match) {
+                    throw new Error("住所データの解析に失敗しました");
+                }
+
+                const municipality = match[1].split(",");
+
+                const prefecture = municipality[1];
+                const city = municipality[3];
+
+                const address = `${prefecture}${city}${lv01Nm}`;
+
+                setSelectedAddress(address);
+            } catch (error) {
+                console.error("逆ジオコーディングエラー:", error);
+                setSelectedAddress("住所を取得できませんでした");
+            } finally {
+                setIsAddressLoading(false);
+            }
+        };
+
+        getAddress();
+    }, [selectedLocation]);
+
     return (
         <Transition show={isOpenReport} appear>
             <Dialog
@@ -230,7 +311,17 @@ export default function FireReportModal({
                                                 <div className="mt-3 text-sm text-neutral-300">
                                                     {selectedLocation ? (
                                                         <div>
-                                                            <p>
+                                                            <p className="text-neutral-400">
+                                                                選択した住所
+                                                            </p>
+
+                                                            <p className="mt-1 font-semibold text-white">
+                                                                {isAddressLoading
+                                                                    ? "住所を取得中..."
+                                                                    : selectedAddress}
+                                                            </p>
+
+                                                            <p className="mt-3">
                                                                 緯度：
                                                                 {selectedLocation.lat.toFixed(
                                                                     6,
@@ -255,6 +346,61 @@ export default function FireReportModal({
                                                 </p>
                                             </div>
                                         </>
+                                    )}
+                                    {currentStep === 3 && (
+                                        <div>
+                                            <p className="mt-4 text-lg font-semibold text-white">
+                                                入力内容の確認
+                                            </p>
+
+                                            <p className="mt-2 text-sm text-neutral-400">
+                                                以下の内容で報告します。内容を確認してください。
+                                            </p>
+
+                                            <div className="mt-5 rounded-lg bg-[#2b2b2b] p-4 flex flex-col gap-y-4">
+                                                <div>
+                                                    <p className="text-sm text-neutral-400">
+                                                        目撃した内容
+                                                    </p>
+                                                    <p className="mt-1 font-semibold">
+                                                        {
+                                                            {
+                                                                fire: "火・炎を見た",
+                                                                smoke: "煙を見た",
+                                                                fireTruck:
+                                                                    "サイレンが聞こえた・消防車を見た",
+                                                                other: "その他",
+                                                            }[reportType]
+                                                        }
+                                                    </p>
+                                                </div>
+
+                                                {reportType === "other" && (
+                                                    <div>
+                                                        <p className="text-sm text-neutral-400">
+                                                            詳細
+                                                        </p>
+                                                        <p className="mt-1 whitespace-pre-wrap">
+                                                            {otherDescription ||
+                                                                "入力なし"}
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                <div>
+                                                    <p className="text-sm text-neutral-400">
+                                                        発生場所
+                                                    </p>
+                                                    <p className="mt-1 font-semibold text-white">
+                                                        {selectedAddress}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <p className="mt-4 text-xs text-neutral-400">
+                                                内容に間違いがなければ送信ボタンを押してください。
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
 
@@ -289,8 +435,10 @@ export default function FireReportModal({
                                     <button
                                         type="button"
                                         disabled={
-                                            currentStep === 2 &&
-                                            selectedLocation === null
+                                            (currentStep === 1 &&
+                                                reportType === "") ||
+                                            (currentStep === 2 &&
+                                                selectedLocation === null)
                                         }
                                         onClick={() => {
                                             if (currentStep < totalSteps) {
