@@ -11,8 +11,12 @@ import { Flame, X, Info } from "lucide-react";
 import { MdFireTruck } from "react-icons/md";
 import { WiSmoke } from "react-icons/wi";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+
+import { supabase } from "@/lib/supabase";
 
 import FireLocationMap from "./FireLocationMap";
+import Turnstile from "@/components/Turnstile";
 
 interface FireReportModalProps {
     isOpenReport: boolean;
@@ -37,6 +41,98 @@ export default function FireReportModal({
 
     const [selectedAddress, setSelectedAddress] = React.useState("");
     const [isAddressLoading, setIsAddressLoading] = React.useState(false);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [addressParts, setAddressParts] = useState<{
+        prefecture: string;
+        city: string;
+        town: string;
+    } | null>(null);
+
+    const [turnstileToken, setTurnstileToken] = useState("");
+    const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+
+    const handleSubmit = async () => {
+        if (!selectedLocation || !reportType || !addressParts) return;
+
+        // Turnstile認証チェック
+        if (!turnstileToken) {
+            toast.error("セキュリティ認証を完了してください");
+            return;
+        }
+
+        setIsSubmitting(true);
+        const toastId = toast.loading("報告を送信中...");
+
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/submit-report`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                    },
+                    body: JSON.stringify({
+                        token: turnstileToken,
+                        report: {
+                            report_type: reportType,
+                            other_detail:
+                                reportType === "other"
+                                    ? otherDescription
+                                    : null,
+                            prefecture: addressParts.prefecture,
+                            city: addressParts.city,
+                            town: addressParts.town,
+                            latitude: selectedLocation.lat,
+                            longitude: selectedLocation.lng,
+                        },
+                    }),
+                },
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || "送信に失敗しました");
+            }
+
+            toast.success("報告を受け付けました", { id: toastId });
+
+            // モーダル閉じてリセット
+            setIsOpenReport(false);
+            setCurrentStep(1);
+            setReportType("");
+            setOtherDescription("");
+            setSelectedLocation(null);
+            setSelectedAddress("");
+            setAddressParts(null);
+        } catch (err) {
+            console.error("送信エラー:", err);
+
+            toast.error(
+                err instanceof Error
+                    ? err.message
+                    : "送信に失敗しました。通信環境を確認してください。",
+                { id: toastId },
+            );
+        } finally {
+            setIsSubmitting(false);
+
+            // 認証トークンを使い切ったのでリセット
+            setTurnstileToken("");
+            setTurnstileResetSignal((prev) => prev + 1);
+        }
+    };
+
+    useEffect(() => {
+        // 確認画面以外では認証ウィジェットが非表示になるため、トークンも破棄する
+        if (currentStep !== totalSteps) {
+            setTurnstileToken("");
+            setTurnstileResetSignal((prev) => prev + 1);
+        }
+    }, [currentStep, totalSteps]);
 
     useEffect(() => {
         if (isOpenReport) {
@@ -111,10 +207,11 @@ export default function FireReportModal({
 
                 const prefecture = municipality[1];
                 const city = municipality[3];
+                const town = lv01Nm;
 
-                const address = `${prefecture}${city}${lv01Nm}`;
+                setAddressParts({ prefecture, city, town });
 
-                setSelectedAddress(address);
+                setSelectedAddress(`${prefecture}${city}${town}`);
             } catch (error) {
                 console.error("逆ジオコーディングエラー:", error);
                 setSelectedAddress("住所を取得できませんでした");
@@ -412,6 +509,17 @@ export default function FireReportModal({
                                                         虚偽の情報は絶対に送信しないでください。
                                                     </span>
                                                 </p>
+
+                                                <div className="mt-4 flex justify-end">
+                                                    <Turnstile
+                                                        onToken={
+                                                            setTurnstileToken
+                                                        }
+                                                        resetSignal={
+                                                            turnstileResetSignal
+                                                        }
+                                                    />
+                                                </div>
                                             </div>
                                         )}
                                     </div>
@@ -445,10 +553,10 @@ export default function FireReportModal({
                                         戻る
                                     </button>
                                 )}
-
                                 <button
                                     type="button"
                                     disabled={
+                                        isSubmitting ||
                                         (currentStep === 1 &&
                                             reportType === "") ||
                                         (currentStep === 2 &&
@@ -458,13 +566,15 @@ export default function FireReportModal({
                                         if (currentStep < totalSteps) {
                                             setCurrentStep((step) => step + 1);
                                         } else {
-                                            console.log("報告を送信");
+                                            handleSubmit();
                                         }
                                     }}
                                     className="chromium:text-xs text-sm w-full rounded-md border border-blue-600 bg-blue-700 hover:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition p-2 font-semibold"
                                 >
                                     {currentStep === totalSteps
-                                        ? "送信"
+                                        ? isSubmitting
+                                            ? "送信中..."
+                                            : "送信"
                                         : "次へ"}
                                 </button>
                             </div>

@@ -3,7 +3,7 @@
 import React from "react";
 import SettingModal from "./components/SettingsModal";
 import FireReportModal from "./components/FireReportModal";
-import GeoJsonMap from "./components/GeoJsonMap";
+import GeoJsonMap from "./components/MainMap";
 import AppSidebar from "../components/app-sidebar";
 
 import {

@@ -6,7 +6,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
-export default function GeoJsonMap() {
+export default function MainMap() {
     const mapContainer = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { Toaster } from "sonner";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -35,7 +36,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                     }}
                 />
             </head>
-            <body className="min-h-full flex flex-col">{children}</body>
+            <body className="min-h-full flex flex-col">
+                {children}
+
+                <Toaster theme="dark" position="top-center" richColors />
+            </body>
         </html>
     );
 }
