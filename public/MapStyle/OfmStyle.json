@@ -17,6 +17,7 @@
   },
   "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
   "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  "projection": { "type": "globe" },
   "layers": [
     {
       "id": "background",
@@ -1097,7 +1098,7 @@
         ["==", ["get", "class"], "town"]
       ],
       "layout": {
-        "icon-image": ["step", ["zoom"], "circle-11", 9, ""],
+        "icon-image": ["step", ["zoom"], "circle_11", 9, ""],
         "icon-size": 0.4,
         "text-anchor": ["step", ["zoom"], "left", 8, "center"],
         "text-field": [

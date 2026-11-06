@@ -1,10 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import { Map, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
+setWorkerUrl(
+    new URL(
+        "maplibre-gl/dist/maplibre-gl-worker.mjs",
+        import.meta.url,
+    ).toString(),
+);
 
 export default function MainMap() {
     const mapContainer = useRef<HTMLDivElement>(null);
@@ -12,23 +17,18 @@ export default function MainMap() {
     useEffect(() => {
         if (!mapContainer.current) return;
 
-        const map = new maplibregl.Map({
+        const map = new Map({
             container: mapContainer.current,
-
             attributionControl: false,
             maplibreLogo: false,
-
-            // OpenFreeMap
             style: "/MapStyle/OfmStyle.json",
-
             center: [139.7, 35.7],
             zoom: 8,
-            projection: "globe",
             minZoom: 1,
             maxZoom: 15,
         });
 
-        map.on("error", (event: { error: any; }) => {
+        map.on("error", (event) => {
             console.error(event.error);
         });
 
@@ -52,7 +52,6 @@ export default function MainMap() {
                 }}
             />
 
-            {/* credit */}
             <div
                 style={{
                     position: "absolute",
@@ -67,11 +66,9 @@ export default function MainMap() {
                     background: "#25344999",
                     backdropFilter: "blur(9px)",
                     border: "1px solid #394f6f",
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.10)",
                     color: "#c9c9c9",
                     fontSize: "11px",
                     fontWeight: 500,
-                    letterSpacing: "0.03em",
                     pointerEvents: "auto",
                     userSelect: "none",
                 }}
@@ -81,18 +78,10 @@ export default function MainMap() {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <strong style={{ color: "#c9c9c9", fontWeight: 500 }}>
-                        MapLibre
-                    </strong>
+                    MapLibre
                 </a>
 
-                <span
-                    style={{
-                        width: "1px",
-                        height: "13px",
-                        background: "#CBD5E1",
-                    }}
-                />
+                <span>|</span>
 
                 <a
                     href="https://www.jma.go.jp/"

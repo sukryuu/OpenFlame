@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import { Map, Marker, type MapMouseEvent } from "maplibre-gl";
 
 interface Location {
     lat: number;
@@ -18,7 +18,7 @@ export default function FireLocationMap({
     onLocationSelect,
 }: FireLocationMapProps) {
     const mapContainer = useRef<HTMLDivElement>(null);
-    const markerRef = useRef<maplibregl.Marker | null>(null);
+    const markerRef = useRef<Marker | null>(null);
 
     const onLocationSelectRef = useRef(onLocationSelect);
     onLocationSelectRef.current = onLocationSelect;
@@ -31,20 +31,20 @@ export default function FireLocationMap({
 
         if (!container) return;
 
-        const map = new maplibregl.Map({
+        const map = new Map({
             container,
             style: "https://tiles.openfreemap.org/styles/bright",
             center: [139.7, 35.7],
             zoom: 8,
             minZoom: 1,
             maxZoom: 15,
-            AttributionControl: false
+            attributionControl: false,
         });
 
         const updateMarker = (location: Location) => {
             markerRef.current?.remove();
 
-            markerRef.current = new maplibregl.Marker({
+            markerRef.current = new Marker({
                 color: "#cf421b",
             })
                 .setLngLat([location.lng, location.lat])
@@ -66,7 +66,7 @@ export default function FireLocationMap({
             }
         };
 
-        const handleClick = (e: maplibregl.MapMouseEvent) => {
+        const handleClick = (e: MapMouseEvent) => {
             const location = {
                 lat: e.lngLat.lat,
                 lng: e.lngLat.lng,
@@ -80,7 +80,7 @@ export default function FireLocationMap({
         map.on("load", handleLoad);
         map.on("click", handleClick);
 
-        map.on("error", (event: { error: any; }) => {
+        map.on("error", (event) => {
             console.error("[MapLibre Error]", event.error);
         });
 
