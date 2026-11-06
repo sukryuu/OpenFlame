@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as maplibregl from "maplibre-gl";
+import maplibregl from "maplibre-gl";
 
 interface Location {
     lat: number;
@@ -80,7 +80,7 @@ export default function FireLocationMap({
         map.on("load", handleLoad);
         map.on("click", handleClick);
 
-        map.on("error", (event) => {
+        map.on("error", (event: { error: any; }) => {
             console.error("[MapLibre Error]", event.error);
         });
 

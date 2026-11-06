@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import * as maplibregl from "maplibre-gl";
+import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
@@ -28,7 +28,7 @@ export default function MainMap() {
             maxZoom: 15,
         });
 
-        map.on("error", (event) => {
+        map.on("error", (event: { error: any; }) => {
             console.error(event.error);
         });
 
