@@ -24,6 +24,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 geist.variable,
             )}
         >
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+              if (typeof window !== 'undefined' && !!window.chrome) {
+                document.documentElement.classList.add('is-chromium');
+              }
+            `,
+                    }}
+                />
+            </head>
             <body className="min-h-full flex flex-col">{children}</body>
         </html>
     );

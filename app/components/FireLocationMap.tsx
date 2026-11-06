@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
-import { AttributionControl } from "maplibre-gl";
 
 interface Location {
     lat: number;
@@ -46,7 +45,7 @@ export default function FireLocationMap({
             markerRef.current?.remove();
 
             markerRef.current = new maplibregl.Marker({
-                color: "#ef4444",
+                color: "#cf421b",
             })
                 .setLngLat([location.lng, location.lat])
                 .addTo(map);
@@ -100,7 +99,7 @@ export default function FireLocationMap({
     }, []);
 
     return (
-        <div className="relative w-full h-75 rounded-lg overflow-hidden">
+        <div className="relative w-full h-75 chromium:h-60 rounded-lg overflow-hidden">
             <div
                 ref={mapContainer}
                 className="w-full h-full"

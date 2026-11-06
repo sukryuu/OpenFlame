@@ -30,7 +30,7 @@ export default function AppSidebar({
                     <Flame className="size-6 shrink-0" />
 
                     <span className="font-bold group-data-[collapsible=icon]:hidden">
-                        Kagisign
+                        OpenFlame
                     </span>
                 </div>
             </SidebarHeader>

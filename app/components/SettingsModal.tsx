@@ -56,7 +56,7 @@ export default function Modal({
                     >
                         <DialogPanel
                             ref={modalRef}
-                            className="relative p-5 w-4/5 h-3/5 max-w-200 max-h-250 bg-[#202020] border border-neutral-700 rounded-xl overflow-auto"
+                            className="relative p-5 md:w-4/5 md:h-3/5 h-4/5 w-full max-w-200 max-h-250 bg-[#202020] border border-neutral-700 rounded-xl overflow-auto"
                         >
                             <h1 className="font-semibold text-xl">
                                 クレジット
@@ -91,7 +91,8 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            気象庁 予報区等GISデータの一覧
+                                            気象庁 予報区等GISデータの一覧 -
+                                            政府標準利用規約（第2.0版）
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -105,7 +106,49 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            MapLibre GL JS
+                                            MapLibre GL JS - BSD 3-Clause
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://openfreemap.org/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            OpenFreeMap - MIT License
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://www.openstreetmap.org/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            ©OpenStreetMap contributors - ODbL
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://openmaptiles.org/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            OpenMapTiles - BSD 3-Clause
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -141,7 +184,7 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            Headless UI
+                                            Headless UI - MIT License
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -155,7 +198,7 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            shadcn/ui
+                                            shadcn/ui - MIT License
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -169,7 +212,7 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            Base UI
+                                            Base UI - MIT License
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -205,7 +248,7 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            Heroicons
+                                            Heroicons - MIT Lisence
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -219,7 +262,7 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            Lucide
+                                            Lucide - ISC License / MIT License
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
@@ -233,7 +276,46 @@ export default function Modal({
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            React Icons
+                                            React Icons - MIT License / CC BY
+                                            4.0 / Apache 2.0
+                                        </a>
+                                        <SquareArrowOutUpRight
+                                            size={12}
+                                            className="text-neutral-300"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-x-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="size-4"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 0 0-8.862 12.872M12.75 3.031a9 9 0 0 1 6.69 14.036m0 0-.177-.529A2.25 2.25 0 0 0 17.128 15H16.5l-.324-.324a1.453 1.453 0 0 0-2.328.377l-.036.073a1.586 1.586 0 0 1-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 0 1-5.276 3.67m0 0a9 9 0 0 1-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25"
+                                        />
+                                    </svg>
+
+                                    <h2 className="text-xs text-neutral-300">
+                                        リバース ジオコーディング
+                                    </h2>
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-x-1">
+                                        <a
+                                            className="font-semibold"
+                                            href="https://github.com/gsi-cyberjapan/gsimaps"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            国土地理院 API -
+                                            公共データ利用規約（第1.0版）（PDL1.0）
                                         </a>
                                         <SquareArrowOutUpRight
                                             size={12}
