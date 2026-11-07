@@ -27,7 +27,6 @@ export default function AppSidebar({
         <Sidebar collapsible="icon">
             <SidebarHeader className="p-4">
                 <div className="flex items-center justify-center gap-2">
-                    <Flame className="size-6 shrink-0" />
 
                     <span className="font-bold group-data-[collapsible=icon]:hidden">
                         OpenFlame
@@ -40,7 +39,6 @@ export default function AppSidebar({
                     <SidebarGroupLabel>メニュー</SidebarGroupLabel>
 
                     <SidebarMenu>
-                        {/* 火事を報告 */}
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 onClick={onOpenReport}
