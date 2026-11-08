@@ -1,6 +1,6 @@
 "use client";
 
-import { Map, Flame, Layers, Database, Settings } from "lucide-react";
+import { Map, Flame, Layers, Database, Settings, Shield } from "lucide-react";
 
 import {
     Sidebar,
@@ -14,6 +14,8 @@ import {
     SidebarMenuButton,
 } from "@/components/ui/sidebar";
 
+import Link from "next/link";
+
 type AppSidebarProps = {
     onOpenSettings: () => void;
     onOpenReport: () => void;
@@ -24,10 +26,11 @@ export default function AppSidebar({
     onOpenReport,
 }: AppSidebarProps) {
     return (
-        <Sidebar collapsible="icon">
+        <Sidebar
+            collapsible="icon" className="dark"
+        >
             <SidebarHeader className="p-4">
                 <div className="flex items-center justify-center gap-2">
-
                     <span className="font-bold group-data-[collapsible=icon]:hidden">
                         OpenFlame
                     </span>
@@ -55,6 +58,14 @@ export default function AppSidebar({
 
             <SidebarFooter className="p-2">
                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            render={<Link href="/privacy-policy" />}
+                        >
+                            <Shield />
+                            <span>プライバシーポリシー</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             onClick={onOpenSettings}

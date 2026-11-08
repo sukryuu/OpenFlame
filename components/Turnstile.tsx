@@ -3,6 +3,10 @@
 import Script from "next/script";
 import { useCallback, useEffect, useRef } from "react";
 
+type Theme = "auto" | "light" | "dark";
+type Size = "normal" | "flexible" | "compact";
+type Appearance = "always" | "execute" | "interaction-only";
+
 declare global {
     interface Window {
         turnstile?: {
@@ -11,6 +15,10 @@ declare global {
                 options: {
                     sitekey: string;
                     action: string;
+                    theme: Theme;
+                    size: Size;
+                    language: string;
+                    appearance: Appearance;
                     callback: (token: string) => void;
                     "expired-callback": () => void;
                     "error-callback": () => void;
@@ -25,9 +33,24 @@ declare global {
 type Props = {
     onToken: (token: string) => void;
     resetSignal: number;
+
+    theme?: Theme;
+    size?: Size;
+    language?: string;
+    appearance?: Appearance;
+
+    className?: string;
 };
 
-export default function Turnstile({ onToken, resetSignal }: Props) {
+export default function Turnstile({
+    onToken,
+    resetSignal,
+    theme = "auto",
+    size = "normal",
+    language = "ja",
+    appearance = "always",
+    className,
+}: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetId = useRef<string | null>(null);
     const callbackRef = useRef(onToken);
@@ -50,11 +73,18 @@ export default function Turnstile({ onToken, resetSignal }: Props) {
         widgetId.current = window.turnstile.render(containerRef.current, {
             sitekey,
             action: "report_submit",
+
+            theme,
+            size,
+            language,
+            appearance,
+
+            // callback
             callback: (token) => callbackRef.current(token),
             "expired-callback": () => callbackRef.current(""),
             "error-callback": () => callbackRef.current(""),
         });
-    }, []);
+    }, [theme, size, language, appearance]);
 
     useEffect(() => {
         renderWidget();
@@ -80,7 +110,8 @@ export default function Turnstile({ onToken, resetSignal }: Props) {
                 strategy="afterInteractive"
                 onReady={renderWidget}
             />
-            <div ref={containerRef} />
+
+            <div ref={containerRef} className={className} />
         </>
     );
 }

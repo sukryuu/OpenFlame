@@ -53,10 +53,32 @@ export default function FireReportModal({
     const [turnstileToken, setTurnstileToken] = useState("");
     const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
 
+    const addLocationNoise = (
+        latitude: number,
+        longitude: number,
+        minDistance = 100,
+        maxDistance = 300,
+    ) => {
+        const angle = Math.random() * 2 * Math.PI;
+
+        const distance =
+            minDistance + Math.random() * (maxDistance - minDistance);
+
+        const latOffset = (distance * Math.cos(angle)) / 111320;
+
+        const lngOffset =
+            (distance * Math.sin(angle)) /
+            (111320 * Math.cos((latitude * Math.PI) / 180));
+
+        return {
+            lat: latitude + latOffset,
+            lng: longitude + lngOffset,
+        };
+    };
+
     const handleSubmit = async () => {
         if (!selectedLocation || !reportType || !addressParts) return;
 
-        // Turnstile認証チェック
         if (!turnstileToken) {
             toast.error("セキュリティ認証を完了してください");
             return;
@@ -66,6 +88,13 @@ export default function FireReportModal({
         const toastId = toast.loading("報告を送信中...");
 
         try {
+            const noisyLocation = addLocationNoise(
+                selectedLocation.lat,
+                selectedLocation.lng,
+                100,
+                300,
+            );
+
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/submit-report`,
                 {
@@ -85,8 +114,8 @@ export default function FireReportModal({
                             prefecture: addressParts.prefecture,
                             city: addressParts.city,
                             town: addressParts.town,
-                            latitude: selectedLocation.lat,
-                            longitude: selectedLocation.lng,
+                            latitude: noisyLocation.lat,
+                            longitude: noisyLocation.lng,
                         },
                     }),
                 },
@@ -100,7 +129,6 @@ export default function FireReportModal({
 
             toast.success("報告を受け付けました", { id: toastId });
 
-            // モーダル閉じてリセット
             setIsOpenReport(false);
             setCurrentStep(1);
             setReportType("");
@@ -120,14 +148,12 @@ export default function FireReportModal({
         } finally {
             setIsSubmitting(false);
 
-            // 認証トークンを使い切ったのでリセット
             setTurnstileToken("");
             setTurnstileResetSignal((prev) => prev + 1);
         }
     };
 
     useEffect(() => {
-        // 確認画面以外では認証ウィジェットが非表示になるため、トークンも破棄する
         if (currentStep !== totalSteps) {
             setTurnstileToken("");
             setTurnstileResetSignal((prev) => prev + 1);
@@ -380,13 +406,7 @@ export default function FireReportModal({
                                                     <div className="flex items-center gap-x-2 text-red-300">
                                                         <Info size={20} />
                                                         <p className="text-sm chromium:text-xs">
-                                                            近くで火災が発生している場合は、すぐに
-                                                            <span>
-                                                                <a href="">
-                                                                    119番通報
-                                                                </a>
-                                                            </span>
-                                                            を行ってください。
+                                                            近くで火災が発生している場合は、すぐに119番通報を行ってください。
                                                         </p>
                                                     </div>
                                                 </div>
@@ -508,6 +528,10 @@ export default function FireReportModal({
                                                     <span className="text-red-300 text-sm chromium:text-[14px]">
                                                         虚偽の情報は絶対に送信しないでください。
                                                     </span>
+                                                    <br />
+                                                    <span className="text-red-300 text-sm chromium:text-[14px]">
+                                                        これは消防署への公式な通報ではありません。近くで火災が発生している場合は、すぐに119番通報を行ってください。
+                                                    </span>
                                                 </p>
 
                                                 <div className="mt-4 flex justify-end">
@@ -518,6 +542,11 @@ export default function FireReportModal({
                                                         resetSignal={
                                                             turnstileResetSignal
                                                         }
+                                                        theme="dark"
+                                                        size="normal"
+                                                        language="ja"
+                                                        appearance="always"
+                                                        className="turnstile"
                                                     />
                                                 </div>
                                             </div>
