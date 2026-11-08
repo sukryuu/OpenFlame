@@ -1,15 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Map, setWorkerUrl } from "maplibre-gl";
+import { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-
-setWorkerUrl(
-    new URL(
-        "maplibre-gl/dist/maplibre-gl-worker.mjs",
-        import.meta.url,
-    ).toString(),
-);
+import "@/lib/maplibre-worker";
 
 export default function MainMap() {
     const mapContainer = useRef<HTMLDivElement>(null);

@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 import { supabase } from "@/lib/supabase";
 
-import FireLocationMap from "./FireLocationMap";
+import FireLocationMap from "@/app/components/FireLocationMap";
 import Turnstile from "@/components/Turnstile";
 
 interface FireReportModalProps {

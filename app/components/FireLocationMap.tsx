@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Map, Marker, type MapMouseEvent } from "maplibre-gl";
+import "@/lib/maplibre-worker";
 
 interface Location {
     lat: number;

@@ -46,7 +46,7 @@ export default function AppSidebar({
                             <SidebarMenuButton
                                 onClick={onOpenReport}
                                 tooltip="火事を報告"
-                                className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                                className="text-red-200 hover:bg-neutral-800 hover:text-red-300"
                             >
                                 <Flame />
                                 <span>火事を報告</span>
