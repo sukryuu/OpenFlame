@@ -33,7 +33,7 @@ export default function TermsOfServicePage() {
                         利用者は、本規約の内容を遵守し、適切な方法で当サイトを利用するものとします。
                         利用者が以下の行為を行った場合、運営者は利用者に対してアクセスの禁止・制限をする場合があります。
                     </p>
-                    <ul className="mt-4 list-disc list-inside space-y-1">
+                    <ul className="mt-4 text-sm list-disc list-inside space-y-1">
                         <li>法令、または公序良俗に反する行為</li>
                         <li>ほかの利用者、または第三者に危害を加える行為</li>
                         <li>運営者、または第三者の権利を侵害する行為</li>
