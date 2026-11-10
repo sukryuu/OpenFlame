@@ -28,6 +28,7 @@ export default function AppSidebar({
     return (
         <Sidebar
             collapsible="icon" className="dark"
+            style={{ zIndex: 20 }}
         >
             <SidebarHeader className="p-4">
                 <div className="flex items-center justify-center gap-2">
