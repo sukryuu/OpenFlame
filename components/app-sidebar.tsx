@@ -32,7 +32,7 @@ export default function AppSidebar({
         >
             <SidebarHeader className="p-4">
                 <div className="flex items-center justify-center gap-2">
-                    <span className="font-bold group-data-[collapsible=icon]:hidden">
+                    <span className="font-bold text-white group-data-[collapsible=icon]:hidden">
                         OpenFlame
                     </span>
                 </div>
